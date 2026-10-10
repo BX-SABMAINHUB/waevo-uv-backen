@@ -9,15 +9,16 @@ import { uvPath } from "@titaniumnetwork-dev/ultraviolet";
 import { epoxyPath } from "@mercuryworkshop/epoxy-transport";
 import { baremuxPath } from "@mercuryworkshop/bare-mux/node";
 
-// En ES modules no existe __dirname, lo reconstruimos:
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
+// public/ está un nivel arriba de src/ → usamos ".."
+const PUBLIC_DIR = join(__dirname, "..", "public");
+
 const app = express();
 // Load our publicPath first and prioritize it over UV.
-app.use(express.static(join(__dirname, "public")));
+app.use(express.static(PUBLIC_DIR));
 // Load vendor files last.
-// The vendor's uv.config.js won't conflict with our uv.config.js inside the publicPath directory.
 app.use("/uv/", express.static(uvPath));
 app.use("/epoxy/", express.static(epoxyPath));
 app.use("/baremux/", express.static(baremuxPath));
@@ -25,7 +26,12 @@ app.use("/baremux/", express.static(baremuxPath));
 // Error for everything else
 app.use((req, res) => {
 	res.status(404);
-	res.sendFile(join(__dirname, "public", "404.html"));
+	// Si no existe 404.html, devolvemos un texto simple
+	res.sendFile(join(PUBLIC_DIR, "404.html"), (err) => {
+		if (err) {
+			res.type("text/plain").send("404 - Not Found");
+		}
+	});
 });
 
 const server = createServer();
@@ -50,8 +56,6 @@ if (isNaN(port)) port = 8080;
 server.on("listening", () => {
 	const address = server.address();
 
-	// by default we are listening on 0.0.0.0 (every interface)
-	// we just need to list a few
 	console.log("Listening on:");
 	console.log(`\thttp://localhost:${address.port}`);
 	console.log(`\thttp://${hostname()}:${address.port}`);
@@ -62,7 +66,6 @@ server.on("listening", () => {
 	);
 });
 
-// https://expressjs.com/en/advanced/healthcheck-graceful-shutdown.html
 process.on("SIGINT", shutdown);
 process.on("SIGTERM", shutdown);
 
