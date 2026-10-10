@@ -1,124 +1,378 @@
 <!doctype html>
-<html>
-	<head>
-		<meta charset="utf-8" />
-		<meta
-			name="viewport"
-			content="width=device-width, initial-scale=1.0, shrink-to-fit=no"
-		/>
-		<title>Ultraviolet | Sophisticated Web Proxy</title>
-		<meta
-			name="description"
-			content="Ultraviolet is a highly sophisticated proxy used for evading internet censorship or accessing websites in a controlled sandbox using the power of service-workers. Unblock sites today!"
-		/>
-		<meta
-			name="keywords"
-			content="proxy, web proxy, ultraviolet, service workers, unblock websites, unblock chromebook, free web proxy, proxy list, proxy sites, un block chromebook, online proxy, proxy server, proxysite, proxy youtube, bypass securly, bypass iboss, bypass lightspeed filter, holy unblocker, chromebooks, titanium network, unblock youtube, youtube proxy, unblocked youtube, youtube unblocked"
-		/>
-		<meta
-			name="theme-color"
-			media="(prefers-color-scheme: dark)"
-			content="#434c5e"
-		/>
-		<meta name="googlebot" content="index, follow, snippet" />
-		<link rel="shortcut icon" content="favicon.ico" />
-		<link rel="stylesheet" href="index.css" />
-		
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no" />
+    <title>Waevo Browser</title>
+    <meta name="description" content="Waevo Browser: navegador web proxeado de alta velocidad." />
+    <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#00e5ff" />
+    <link rel="shortcut icon" content="favicon.ico" />
 
-		<script src="baremux/index.js"></script>
-		<script src="uv/uv.bundle.js"></script>
-		<script src="uv/uv.config.js"></script>
+    <style>
+        :root {
+            --bg-0: #05050a;
+            --bg-1: #0a0a14;
+            --bg-2: #10101c;
+            --panel: rgba(18, 18, 30, 0.55);
+            --border: rgba(0, 229, 255, 0.18);
+            --border-strong: rgba(0, 229, 255, 0.45);
+            --cyan: #00e5ff;
+            --cyan-glow: rgba(0, 229, 255, 0.55);
+            --magenta: #bd00ff;
+            --magenta-glow: rgba(189, 0, 255, 0.5);
+            --text: #e8f6ff;
+            --muted: #6b7a99;
+            --danger: #ff2d6b;
+            --grid: rgba(0, 229, 255, 0.06);
+        }
 
-		<script type="application/ld+json">
-			{
-				"@context": "https://schema.org",
-				"@type": "FAQPage",
-				"mainEntity": [
-					{
-						"@type": "Question",
-						"name": "What is Ultraviolet (Web Proxy)?",
-						"acceptedAnswer": {
-							"@type": "Answer",
-							"text": "Highly sophisticated proxy used for evading internet censorship or accessing websites in a controlled sandbox using the power of service-workers and more!"
-						}
-					},
-					{
-						"@type": "Question",
-						"name": "How do I unblock sites using Ultraviolet?",
-						"acceptedAnswer": {
-							"@type": "Answer",
-							"text": "Simply head to an official site featuring Ultraviolet such as Holy Unblocker or Incognito! You can also self-host Ultraviolet on your own web server for maximum privacy."
-						}
-					},
-					{
-						"@type": "Question",
-						"name": "What if Ultraviolet is blocked or not working?",
-						"acceptedAnswer": {
-							"@type": "Answer",
-							"text": "Join the Titanium Network Discord at discord.gg/unblock!"
-						}
-					}
-				]
-			}
-		</script>
-	</head>
+        * { box-sizing: border-box; }
 
-	<body>
-		<div
-			title="Ultraviolet Logo"
-			class="flex-center logo-wrapper header-center"
-		>
-			<img class="logo" src="uv.png" alt="Ultraviolet" />
-			<h1>Ultraviolet | TN</h1>
-		</div>
-		<div class="flex-center desc left-margin">
-			<p>
-				Ultraviolet is highly sophisticated proxy used for evading internet
-				censorship.
-			</p>
-		</div>
+        html, body {
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            font-family: 'Rajdhani', 'Orbitron', 'Segoe UI', system-ui, sans-serif;
+            color: var(--text);
+            background: var(--bg-0);
+            overflow-x: hidden;
+        }
 
-		<form id="uv-form" class="flex-center">
-			<input
-				id="uv-search-engine"
-				value="https://www.google.com/search?q=%s"
-				type="hidden"
-			/>
-			<input id="uv-address" type="text" placeholder="Search the web freely" />
-		</form>
-		<div class="desc left-margin">
-			<p id="uv-error"></p>
-			<pre id="uv-error-code"></pre>
-		</div>
-		<footer>
-			<div>
-				<a
-					title="The TitaniumNetwork GitHub organization"
-					href="https://github.com/titaniumnetwork-dev"
-					>TitaniumNetwork</a
-				>
-				<a title="The TitaniumNetwork Discord" href="https://discord.gg/unblock"
-					>Discord</a
-				>
-				<a
-					title="The TompHTTP GitHub organization"
-					href="https://github.com/tomphttp"
-					>TompHTTP</a
-				>
-				<a
-					title="The official deployment repository for Ultraviolet"
-					href="https://github.com/titaniumnetwork-dev/Ultraviolet-App"
-					>GitHub</a
-				>
-				<a title="License information" href="credits.html">Credits</a>
-			</div>
-			<div>
-				<span>Ultraviolet &copy; TN 2023</span>
-			</div>
-		</footer>
-		<iframe style="display: none" id="uv-frame"></iframe>
-		<script src="register-sw.js"></script>
-		<script src="search.js"></script>
-		<script src="index.js"></script>
-	</body>
+        /* Fondo techno: grid + gradient + scanlines */
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background:
+                radial-gradient(900px 600px at 15% -10%, rgba(0, 229, 255, 0.12), transparent 60%),
+                radial-gradient(900px 600px at 90% 110%, rgba(189, 0, 255, 0.12), transparent 60%),
+                linear-gradient(180deg, #05050a 0%, #0a0a14 50%, #05050a 100%);
+            z-index: -2;
+        }
+
+        body::after {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background-image:
+                linear-gradient(var(--grid) 1px, transparent 1px),
+                linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+            background-size: 44px 44px;
+            mask-image: radial-gradient(circle at 50% 40%, black 40%, transparent 85%);
+            -webkit-mask-image: radial-gradient(circle at 50% 40%, black 40%, transparent 85%);
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        .flex-center {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* ── Layout principal ── */
+        main {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+            gap: 28px;
+            position: relative;
+        }
+
+        /* ── Logo ── */
+        .logo-wrapper {
+            flex-direction: column;
+            gap: 14px;
+            text-align: center;
+            position: relative;
+        }
+
+        .logo-wrapper::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 320px;
+            height: 320px;
+            transform: translate(-50%, -50%);
+            background: radial-gradient(circle, var(--cyan-glow) 0%, transparent 65%);
+            opacity: 0.25;
+            filter: blur(40px);
+            z-index: -1;
+            pointer-events: none;
+            animation: pulseGlow 4s ease-in-out infinite;
+        }
+
+        @keyframes pulseGlow {
+            0%, 100% { opacity: 0.18; transform: translate(-50%, -50%) scale(1); }
+            50% { opacity: 0.35; transform: translate(-50%, -50%) scale(1.1); }
+        }
+
+        .logo {
+            width: 84px;
+            height: 84px;
+            object-fit: contain;
+            filter: drop-shadow(0 0 18px var(--cyan-glow)) drop-shadow(0 0 30px var(--magenta-glow));
+            animation: floatLogo 6s ease-in-out infinite;
+        }
+
+        @keyframes floatLogo {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-8px); }
+        }
+
+        .logo-wrapper h1 {
+            margin: 0;
+            font-size: 2.6rem;
+            font-weight: 800;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            background: linear-gradient(110deg, var(--cyan), var(--magenta) 55%, var(--cyan));
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            animation: gradientShift 6s linear infinite;
+            text-shadow: 0 0 30px rgba(0, 229, 255, 0.25);
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% center; }
+            100% { background-position: 200% center; }
+        }
+
+        /* ── Descripción ── */
+        .desc {
+            max-width: 640px;
+            text-align: center;
+            padding: 0 20px;
+        }
+
+        .desc p {
+            color: var(--muted);
+            font-size: 1rem;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            margin: 0;
+            font-weight: 500;
+        }
+
+        /* ── Formulario de búsqueda ── */
+        #uv-form {
+            width: 100%;
+            max-width: 720px;
+            position: relative;
+            padding: 4px;
+            border-radius: 16px;
+            background: linear-gradient(135deg, var(--cyan), var(--magenta));
+            box-shadow:
+                0 0 25px rgba(0, 229, 255, 0.25),
+                0 0 60px rgba(189, 0, 255, 0.15),
+                inset 0 0 0 1px rgba(255, 255, 255, 0.05);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        #uv-form:focus-within {
+            transform: translateY(-2px);
+            box-shadow:
+                0 0 40px rgba(0, 229, 255, 0.55),
+                0 0 90px rgba(189, 0, 255, 0.3),
+                inset 0 0 0 1px rgba(255, 255, 255, 0.1);
+        }
+
+        #uv-address {
+            width: 100%;
+            height: 62px;
+            padding: 0 26px;
+            border: none;
+            border-radius: 14px;
+            background: #07070d;
+            color: var(--text);
+            font-size: 1.05rem;
+            font-family: inherit;
+            letter-spacing: 1px;
+            outline: none;
+            transition: background 0.3s ease;
+        }
+
+        #uv-address::placeholder {
+            color: var(--muted);
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            font-size: 0.9rem;
+        }
+
+        #uv-address:focus {
+            background: #0a0a14;
+        }
+
+        /* ── Errores ── */
+        #uv-error {
+            color: var(--danger);
+            font-weight: 600;
+            letter-spacing: 1px;
+            text-align: center;
+            margin: 8px 0 0 0;
+            min-height: 20px;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+        }
+
+        #uv-error-code {
+            color: var(--muted);
+            font-family: ui-monospace, 'Courier New', monospace;
+            font-size: 0.75rem;
+            text-align: center;
+            white-space: pre-wrap;
+            margin: 0;
+            max-width: 640px;
+        }
+
+        /* ── Footer / Único enlace ── */
+        footer {
+            position: fixed;
+            bottom: 24px;
+            left: 0;
+            right: 0;
+            display: flex;
+            justify-content: center;
+            padding: 0 20px;
+            z-index: 10;
+        }
+
+        .waevo-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 26px;
+            border-radius: 30px;
+            background: rgba(0, 229, 255, 0.06);
+            border: 1px solid var(--border);
+            color: var(--cyan);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+        }
+
+        .waevo-link::before {
+            content: '⚡';
+            font-size: 1.1rem;
+            filter: drop-shadow(0 0 6px var(--cyan-glow));
+        }
+
+        .waevo-link:hover {
+            background: rgba(0, 229, 255, 0.14);
+            border-color: var(--border-strong);
+            color: #ffffff;
+            transform: translateY(-3px);
+            box-shadow:
+                0 0 25px rgba(0, 229, 255, 0.4),
+                0 0 50px rgba(189, 0, 255, 0.2);
+            letter-spacing: 2.5px;
+        }
+
+        /* ── Scanlines decorativas ── */
+        .scanlines {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 1;
+            background: repeating-linear-gradient(
+                to bottom,
+                transparent 0px,
+                transparent 3px,
+                rgba(0, 229, 255, 0.02) 3px,
+                rgba(0, 229, 255, 0.02) 4px
+            );
+        }
+
+        /* ── Esquinas techno decorativas ── */
+        .corner {
+            position: fixed;
+            width: 34px;
+            height: 34px;
+            border: 2px solid var(--cyan);
+            opacity: 0.35;
+            pointer-events: none;
+            z-index: 2;
+        }
+        .corner.tl { top: 18px; left: 18px; border-right: none; border-bottom: none; }
+        .corner.tr { top: 18px; right: 18px; border-left: none; border-bottom: none; }
+        .corner.bl { bottom: 18px; left: 18px; border-right: none; border-top: none; }
+        .corner.br { bottom: 18px; right: 18px; border-left: none; border-top: none; }
+
+        /* ── Responsive ── */
+        @media (max-width: 600px) {
+            .logo-wrapper h1 { font-size: 1.8rem; letter-spacing: 2px; }
+            .logo { width: 64px; height: 64px; }
+            #uv-address { height: 54px; font-size: 0.95rem; padding: 0 20px; }
+            .desc p { font-size: 0.85rem; }
+            .waevo-link { padding: 10px 20px; font-size: 0.8rem; }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Decoración techno -->
+    <div class="scanlines"></div>
+    <div class="corner tl"></div>
+    <div class="corner tr"></div>
+    <div class="corner bl"></div>
+    <div class="corner br"></div>
+
+    <main>
+        <!-- Logo -->
+        <div title="Waevo Logo" class="flex-center logo-wrapper">
+            <img class="logo" src="uv.png" alt="Waevo" />
+            <h1>Waevo Browser</h1>
+        </div>
+
+        <!-- Descripción -->
+        <div class="flex-center desc">
+            <p>Navegador web proxeado de alta velocidad</p>
+        </div>
+
+        <!-- Formulario -->
+        <form id="uv-form" class="flex-center">
+            <input
+                id="uv-search-engine"
+                value="https://www.google.com/search?q=%s"
+                type="hidden"
+            />
+            <input id="uv-address" type="text" placeholder="Buscar en la web" autocomplete="off" spellcheck="false" />
+        </form>
+
+        <!-- Errores -->
+        <div class="desc">
+            <p id="uv-error"></p>
+            <pre id="uv-error-code"></pre>
+        </div>
+    </main>
+
+    <!-- Único enlace -->
+    <footer>
+        <a class="waevo-link" href="https://waevo.onrender.com/active/" target="_blank" rel="noopener">
+            Ir a Waevo
+        </a>
+    </footer>
+
+    <!-- Iframe oculto para UV -->
+    <iframe style="display: none" id="uv-frame"></iframe>
+
+    <!-- Scripts (mismos del original) -->
+    <script src="baremux/index.js"></script>
+    <script src="uv/uv.bundle.js"></script>
+    <script src="uv/uv.config.js"></script>
+    <script src="register-sw.js"></script>
+    <script src="search.js"></script>
+    <script src="index.js"></script>
+</body>
 </html>
