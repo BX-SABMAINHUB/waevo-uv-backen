@@ -11,70 +11,64 @@ import { baremuxPath } from "@mercuryworkshop/bare-mux/node";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
-
-// public/ está un nivel arriba de src/ → usamos ".."
 const PUBLIC_DIR = join(__dirname, "..", "public");
 
 const app = express();
-// Load our publicPath first and prioritize it over UV.
+
+// ── Archivos estáticos ──
 app.use(express.static(PUBLIC_DIR));
-// Load vendor files last.
 app.use("/uv/", express.static(uvPath));
 app.use("/epoxy/", express.static(epoxyPath));
 app.use("/baremux/", express.static(baremuxPath));
 
-// Error for everything else
+// ── 404 ──
 app.use((req, res) => {
-	res.status(404);
-	// Si no existe 404.html, devolvemos un texto simple
-	res.sendFile(join(PUBLIC_DIR, "404.html"), (err) => {
-		if (err) {
-			res.type("text/plain").send("404 - Not Found");
-		}
-	});
+    res.status(404);
+    res.sendFile(join(PUBLIC_DIR, "404.html"), (err) => {
+        if (err) {
+            res.type("text/plain").send("404 - Not Found");
+        }
+    });
 });
 
+// ── Servidor HTTP ──
 const server = createServer();
 
 server.on("request", (req, res) => {
-	res.setHeader("Cross-Origin-Opener-Policy", "same-origin");
-	res.setHeader("Cross-Origin-Embedder-Policy", "require-corp");
-	app(req, res);
+    res.setHeader("Cross-Origin-Opener-Policy", "same-origin");
+    res.setHeader("Cross-Origin-Embedder-Policy", "require-corp");
+    app(req, res);
 });
+
+// ── WebSocket para Wisp / Epoxy ──
 server.on("upgrade", (req, socket, head) => {
-	if (req.url.endsWith("/wisp/")) {
-		wisp.routeRequest(req, socket, head);
-		return;
-	} 
-	socket.end();
+    const url = req.url || "";
+    if (url.startsWith("/wisp/") || url === "/wisp") {
+        wisp.routeRequest(req, socket, head);
+        return;
+    }
+    socket.end();
 });
 
+// ── Puerto ──
 let port = parseInt(process.env.PORT || "");
-
 if (isNaN(port)) port = 8080;
 
 server.on("listening", () => {
-	const address = server.address();
-
-	console.log("Listening on:");
-	console.log(`\thttp://localhost:${address.port}`);
-	console.log(`\thttp://${hostname()}:${address.port}`);
-	console.log(
-		`\thttp://${
-			address.family === "IPv6" ? `[${address.address}]` : address.address
-		}:${address.port}`
-	);
+    const address = server.address();
+    console.log("✅ Waevo UV Backend escuchando:");
+    console.log(`\thttp://localhost:${address.port}`);
+    console.log(`\thttp://${hostname()}:${address.port}`);
 });
 
+// ── Shutdown limpio ──
 process.on("SIGINT", shutdown);
 process.on("SIGTERM", shutdown);
 
 function shutdown() {
-	console.log("SIGTERM signal received: closing HTTP server");
-	server.close();
-	process.exit(0);
+    console.log("Cerrando servidor...");
+    server.close();
+    process.exit(0);
 }
 
-server.listen({
-	port,
-});
+server.listen({ port });
