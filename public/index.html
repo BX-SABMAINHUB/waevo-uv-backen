@@ -38,7 +38,6 @@
             overflow-x: hidden;
         }
 
-        /* Fondo techno: grid + gradient + scanlines */
         body::before {
             content: '';
             position: fixed;
@@ -71,7 +70,7 @@
         }
 
         /* ── Layout principal ── */
-        main {
+        #waevo-home {
             min-height: 100vh;
             display: flex;
             flex-direction: column;
@@ -173,6 +172,8 @@
                 0 0 60px rgba(189, 0, 255, 0.15),
                 inset 0 0 0 1px rgba(255, 255, 255, 0.05);
             transition: transform 0.3s ease, box-shadow 0.3s ease;
+            display: flex;
+            align-items: stretch;
         }
 
         #uv-form:focus-within {
@@ -184,11 +185,11 @@
         }
 
         #uv-address {
-            width: 100%;
+            flex: 1;
             height: 62px;
             padding: 0 26px;
             border: none;
-            border-radius: 14px;
+            border-radius: 14px 0 0 14px;
             background: #07070d;
             color: var(--text);
             font-size: 1.05rem;
@@ -207,6 +208,40 @@
 
         #uv-address:focus {
             background: #0a0a14;
+        }
+
+        /* ── Botón Enter ── */
+        .uv-submit-btn {
+            width: 62px;
+            border: none;
+            background: #07070d;
+            color: var(--cyan);
+            cursor: pointer;
+            border-radius: 0 14px 14px 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.25s ease;
+            padding: 0;
+        }
+
+        .uv-submit-btn svg {
+            transition: transform 0.25s ease, filter 0.25s ease;
+            filter: drop-shadow(0 0 6px var(--cyan-glow));
+        }
+
+        .uv-submit-btn:hover {
+            background: rgba(0, 229, 255, 0.12);
+            color: #ffffff;
+        }
+
+        .uv-submit-btn:hover svg {
+            transform: translateX(4px);
+            filter: drop-shadow(0 0 12px var(--cyan));
+        }
+
+        .uv-submit-btn:active svg {
+            transform: translateX(8px) scale(0.95);
         }
 
         /* ── Errores ── */
@@ -309,11 +344,71 @@
         .corner.bl { bottom: 18px; left: 18px; border-right: none; border-top: none; }
         .corner.br { bottom: 18px; right: 18px; border-left: none; border-top: none; }
 
+        /* ── Iframe a pantalla completa ── */
+        #uv-frame {
+            position: fixed;
+            inset: 0;
+            width: 100vw;
+            height: 100vh;
+            border: none;
+            background: #ffffff;
+            z-index: 9998;
+            display: none;
+        }
+
+        #uv-frame.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* ── Botón volver (en modo pantalla completa) ── */
+        #uv-back-btn {
+            position: fixed;
+            top: 14px;
+            left: 14px;
+            z-index: 10000;
+            display: none;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 18px;
+            border-radius: 30px;
+            background: rgba(5, 5, 10, 0.85);
+            border: 1px solid var(--border-strong);
+            color: var(--cyan);
+            font-family: inherit;
+            font-size: 0.8rem;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            box-shadow: 0 0 20px rgba(0, 229, 255, 0.25);
+        }
+
+        #uv-back-btn.active {
+            display: inline-flex;
+        }
+
+        #uv-back-btn:hover {
+            background: rgba(0, 229, 255, 0.15);
+            color: #ffffff;
+            transform: translateY(-2px);
+            box-shadow: 0 0 30px rgba(0, 229, 255, 0.55);
+        }
+
         /* ── Responsive ── */
         @media (max-width: 600px) {
             .logo-wrapper h1 { font-size: 1.8rem; letter-spacing: 2px; }
             .logo { width: 64px; height: 64px; }
             #uv-address { height: 54px; font-size: 0.95rem; padding: 0 20px; }
+            .uv-submit-btn { width: 54px; }
             .desc p { font-size: 0.85rem; }
             .waevo-link { padding: 10px 20px; font-size: 0.8rem; }
         }
@@ -328,29 +423,32 @@
     <div class="corner bl"></div>
     <div class="corner br"></div>
 
-    <main>
-        <!-- Logo -->
+    <!-- ══ HOME ══ -->
+    <main id="waevo-home">
         <div title="Waevo Logo" class="flex-center logo-wrapper">
             <img class="logo" src="uv.png" alt="Waevo" />
             <h1>Waevo Browser</h1>
         </div>
 
-        <!-- Descripción -->
         <div class="flex-center desc">
             <p>Navegador web proxeado de alta velocidad</p>
         </div>
 
-        <!-- Formulario -->
-        <form id="uv-form" class="flex-center">
+        <form id="uv-form">
             <input
                 id="uv-search-engine"
                 value="https://www.google.com/search?q=%s"
                 type="hidden"
             />
             <input id="uv-address" type="text" placeholder="Buscar en la web" autocomplete="off" spellcheck="false" />
+            <button type="submit" class="uv-submit-btn" aria-label="Ir">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                    <polyline points="12 5 19 12 12 19"></polyline>
+                </svg>
+            </button>
         </form>
 
-        <!-- Errores -->
         <div class="desc">
             <p id="uv-error"></p>
             <pre id="uv-error-code"></pre>
@@ -364,8 +462,17 @@
         </a>
     </footer>
 
-    <!-- Iframe oculto para UV -->
-    <iframe style="display: none" id="uv-frame"></iframe>
+    <!-- Iframe a pantalla completa -->
+    <iframe id="uv-frame"></iframe>
+
+    <!-- Botón volver -->
+    <button id="uv-back-btn" type="button" title="Volver al inicio">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="19" y1="12" x2="5" y2="12"></line>
+            <polyline points="12 19 5 12 12 5"></polyline>
+        </svg>
+        Volver
+    </button>
 
     <!-- Scripts (mismos del original) -->
     <script src="baremux/index.js"></script>
@@ -374,5 +481,69 @@
     <script src="register-sw.js"></script>
     <script src="search.js"></script>
     <script src="index.js"></script>
+
+    <!-- Lógica de pantalla completa al abrir URL -->
+    <script>
+        (function () {
+            const frame = document.getElementById('uv-frame');
+            const home = document.getElementById('waevo-home');
+            const footer = document.querySelector('footer');
+            const backBtn = document.getElementById('uv-back-btn');
+            const form = document.getElementById('uv-form');
+            const input = document.getElementById('uv-address');
+
+            if (!frame) return;
+
+            // Observa cambios en el atributo src del iframe
+            const obs = new MutationObserver(() => {
+                const src = frame.getAttribute('src');
+                if (src && src !== '' && src !== 'about:blank') {
+                    // Activar pantalla completa
+                    frame.classList.add('active');
+                    home.style.display = 'none';
+                    footer.style.display = 'none';
+                    backBtn.classList.add('active');
+                    document.body.style.overflow = 'hidden';
+                }
+            });
+            obs.observe(frame, { attributes: true, attributeFilter: ['src'] });
+
+            // Botón volver: cierra la pantalla completa
+            backBtn.addEventListener('click', () => {
+                frame.classList.remove('active');
+                frame.removeAttribute('src');
+                home.style.display = '';
+                footer.style.display = '';
+                backBtn.classList.remove('active');
+                document.body.style.overflow = '';
+                input.value = '';
+                input.focus();
+            });
+
+            // Al enviar el formulario, se dispara la navegación (search.js lo maneja).
+            // Si por algún motivo search.js no lo maneja, hacemos fallback manual:
+            form.addEventListener('submit', (e) => {
+                // Dejamos que search.js haga su trabajo; si no está, forzamos
+                setTimeout(() => {
+                    const src = frame.getAttribute('src');
+                    if (!src || src === '' || src === 'about:blank') {
+                        // Fallback mínimo: usar UV directamente
+                        const query = input.value.trim();
+                        if (!query) return;
+                        try {
+                            if (typeof self.__uv$config !== 'undefined' && typeof Ultraviolet !== 'undefined') {
+                                const url = query.includes('.') && !query.includes(' ')
+                                    ? (query.startsWith('http') ? query : 'https://' + query)
+                                    : 'https://www.google.com/search?q=' + encodeURIComponent(query);
+                                frame.src = self.__uv$config.prefix + self.__uv$config.encodeUrl(url);
+                            }
+                        } catch (err) {
+                            console.error('Fallback UV error:', err);
+                        }
+                    }
+                }, 50);
+            });
+        })();
+    </script>
 </body>
 </html>
