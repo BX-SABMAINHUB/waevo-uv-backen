@@ -1,4 +1,5 @@
-import { join } from "node:path";
+import { join, dirname } from "node:path";
+import { fileURLToPath } from "node:url";
 import { hostname } from "node:os";
 import { createServer } from "node:http";
 import express from "express";
@@ -8,9 +9,13 @@ import { uvPath } from "@titaniumnetwork-dev/ultraviolet";
 import { epoxyPath } from "@mercuryworkshop/epoxy-transport";
 import { baremuxPath } from "@mercuryworkshop/bare-mux/node";
 
+// En ES modules no existe __dirname, lo reconstruimos:
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
 const app = express();
 // Load our publicPath first and prioritize it over UV.
-app.use(express.static("./public"));
+app.use(express.static(join(__dirname, "public")));
 // Load vendor files last.
 // The vendor's uv.config.js won't conflict with our uv.config.js inside the publicPath directory.
 app.use("/uv/", express.static(uvPath));
@@ -20,7 +25,7 @@ app.use("/baremux/", express.static(baremuxPath));
 // Error for everything else
 app.use((req, res) => {
 	res.status(404);
-	res.sendFile("./public/404.html");
+	res.sendFile(join(__dirname, "public", "404.html"));
 });
 
 const server = createServer();
